@@ -1,0 +1,39 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+*.log
+*.tmp
+.mvn/
+!**/src/main/**
+!**/src/test/**
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# LocalStack
+localstack_data/
+
+# Logs
+*.log
+
+# Environment Variables
+.env
+
+# Docker
+docker-compose.override.yml

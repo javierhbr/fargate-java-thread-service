@@ -1,0 +1,140 @@
+# ==========================================
+# APPLICATION CONFIGURATION
+# ==========================================
+spring:
+  application:
+    name: export-processor
+
+  # ========================================
+  # VIRTUAL THREADS - CRITICAL SETTING
+  # ========================================
+  threads:
+    virtual:
+      enabled: true
+
+  # ========================================
+  # GRACEFUL SHUTDOWN
+  # ========================================
+  lifecycle:
+    timeout-per-shutdown-phase: 120s
+
+  # ========================================
+  # JACKSON CONFIGURATION
+  # ========================================
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+# ==========================================
+# AWS CONFIGURATION
+# ==========================================
+spring.cloud.aws:
+  region:
+    static: ${AWS_REGION:us-east-1}
+  # Credentials from environment/IAM role
+  credentials:
+    instance-profile: true
+
+  # SQS Configuration
+  sqs:
+    enabled: true
+    listener:
+      max-concurrent-messages: 1
+      max-messages-per-poll: 1
+      poll-timeout: 20s
+
+# ==========================================
+# APPLICATION SPECIFIC
+# ==========================================
+app:
+  # SQS Queues
+  sqs:
+    export-queue: ${SQS_EXPORT_QUEUE:export-requests}
+
+  # S3 Buckets
+  s3:
+    output-bucket: ${S3_OUTPUT_BUCKET:export-outputs}
+
+  # DynamoDB Tables
+  dynamodb:
+    job-tracking-table: ${DYNAMODB_JOB_TABLE:job-tracking}
+
+  # Export API
+  export-api:
+    base-url: ${EXPORT_API_URL:https://api.example.com}
+    timeout-seconds: 300
+
+  # Processing
+  processing:
+    heartbeat-interval-seconds: 120
+    checkpoint-interval-seconds: 300
+    max-concurrent-uploads: 5
+    multipart-threshold-mb: 100
+
+# ==========================================
+# RESILIENCE4J CONFIGURATION
+# ==========================================
+resilience4j:
+  retry:
+    instances:
+      export-api:
+        max-attempts: 5
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - java.io.IOException
+          - java.net.SocketTimeoutException
+          - java.util.concurrent.TimeoutException
+
+  circuitbreaker:
+    instances:
+      export-api:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 30s
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 3
+
+# ==========================================
+# ACTUATOR / MONITORING
+# ==========================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+# ==========================================
+# LOGGING
+# ==========================================
+logging:
+  level:
+    root: INFO
+    com.yourcompany.exportprocessor: DEBUG
+    software.amazon.awssdk: WARN
+    io.awspring.cloud: INFO
+  pattern:
+    console: "%d{ISO8601} [%thread] %-5level %logger{36} - %X{messageId} %X{jobId} - %msg%n"
+
+# ==========================================
+# SERVER (for health endpoints)
+# ==========================================
+server:
+  port: 8080
+  shutdown: graceful

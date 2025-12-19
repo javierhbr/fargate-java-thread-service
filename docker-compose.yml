@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # LocalStack (AWS services mock)
+  localstack:
+    image: localstack/localstack:3.0
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs,s3,dynamodb
+      - DEBUG=1
+      - DATA_DIR=/var/lib/localstack/data
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - ./localstack-init:/etc/localstack/init/ready.d
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Export Processor Application
+  # export-processor:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=local
+  #     - AWS_REGION=us-east-1
+  #     - AWS_ACCESS_KEY_ID=test
+  #     - AWS_SECRET_ACCESS_KEY=test
+  #     - SPRING_CLOUD_AWS_ENDPOINT=http://localstack:4566
+  #     - SQS_EXPORT_QUEUE=export-requests
+  #     - S3_OUTPUT_BUCKET=export-outputs
+  #     - DYNAMODB_JOB_TABLE=job-tracking
+  #     - EXPORT_API_URL=http://mock-api:8081
+  #   depends_on:
+  #     localstack:
+  #       condition: service_healthy
+
+  # Mock Export API (for local testing)
+  mock-api:
+    image: mockoon/cli:latest
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./mock-api:/data
+    command: ["--data", "/data/export-api.json", "--port", "8081"]
+
+volumes:
+  localstack_data:

@@ -1,0 +1,34 @@
+# Test profile
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+
+spring.cloud.aws:
+  region:
+    static: us-east-1
+  credentials:
+    access-key: test
+    secret-key: test
+
+app:
+  sqs:
+    export-queue: test-export-requests
+  s3:
+    output-bucket: test-export-outputs
+  dynamodb:
+    job-tracking-table: test-job-tracking
+  export-api:
+    base-url: http://localhost:8081
+    timeout-seconds: 30
+  processing:
+    heartbeat-interval-seconds: 30
+    checkpoint-interval-seconds: 60
+    max-concurrent-uploads: 2
+    multipart-threshold-mb: 10
+
+logging:
+  level:
+    root: INFO
+    com.yourcompany.exportprocessor: DEBUG

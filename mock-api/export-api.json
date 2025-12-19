@@ -1,0 +1,98 @@
+{
+  "uuid": "mock-export-api",
+  "lastMigration": 28,
+  "name": "Mock Export API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 8081,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "export-download",
+      "documentation": "Download export data as ZIP",
+      "method": "get",
+      "endpoint": "exports/:exportId/download",
+      "responses": [
+        {
+          "uuid": "success-response",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/octet-stream"
+            },
+            {
+              "key": "Content-Disposition",
+              "value": "attachment; filename=\"export.zip\""
+            }
+          ],
+          "bodyType": "FILE",
+          "filePath": "/data/sample-export.zip",
+          "databucketID": "",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "health-check",
+      "documentation": "Health check endpoint",
+      "method": "get",
+      "endpoint": "health",
+      "responses": [
+        {
+          "uuid": "health-response",
+          "body": "{\"status\": \"UP\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Healthy",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "data": []
+}

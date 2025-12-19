@@ -1,0 +1,13 @@
+# Production profile
+
+spring.cloud.aws:
+  credentials:
+    instance-profile: true  # Use IAM role
+
+logging:
+  level:
+    root: INFO
+    com.yourcompany.exportprocessor: INFO
+    software.amazon.awssdk: WARN
+  pattern:
+    console: '{"timestamp":"%d{ISO8601}","level":"%level","logger":"%logger","message":"%msg","messageId":"%X{messageId}","jobId":"%X{jobId}"}%n'

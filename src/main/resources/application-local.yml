@@ -1,0 +1,21 @@
+# Local development profile using LocalStack
+
+spring.cloud.aws:
+  region:
+    static: us-east-1
+  credentials:
+    access-key: test
+    secret-key: test
+  endpoint: http://localhost:4566
+
+  sqs:
+    endpoint: http://localhost:4566
+
+app:
+  export-api:
+    base-url: http://localhost:8081
+
+logging:
+  level:
+    com.yourcompany.exportprocessor: DEBUG
+    software.amazon.awssdk: INFO
