@@ -14,6 +14,12 @@ spring.cloud.aws:
 app:
   export-api:
     base-url: http://localhost:8081
+    # Increased timeout for large file testing
+    # Default (300s = 5 min) is sufficient for small files (< 100MB)
+    # For GB-size files with throttling, increase accordingly:
+    #   - 1GB @ 1MB/s: ~1000s (~17 min)
+    #   - 5GB @ 512KB/s: ~10000s (~2.8 hours)
+    timeout-seconds: 1200  # 20 minutes - suitable for up to 1GB files at normal speed
 
 logging:
   level:

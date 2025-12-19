@@ -1,0 +1,31 @@
+{
+  "name": "mock-export-api",
+  "version": "1.0.0",
+  "description": "Mock Export API server for testing large file downloads with configurable delays and throttling",
+  "main": "mock-server.js",
+  "scripts": {
+    "start": "node mock-server.js",
+    "dev": "nodemon mock-server.js"
+  },
+  "keywords": [
+    "mock",
+    "api",
+    "export",
+    "testing",
+    "large-files",
+    "streaming"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "archiver": "^6.0.1",
+    "stream-throttle": "^0.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
